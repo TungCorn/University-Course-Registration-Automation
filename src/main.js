@@ -5,6 +5,9 @@ import { logger, sleep, isRegistrationPage } from './utils.js';
  * Main automation logic
  * EDUCATIONAL PURPOSES ONLY - demonstrates DOM manipulation
  */
+const MAX_RETRIES = 50; // Prevent infinite loop
+let retryCount = 0;
+
 async function main() {
     if (!isRegistrationPage()) {
         logger("Not on registration page. Bot is idle.", "warning");
@@ -13,23 +16,23 @@ async function main() {
 
     logger("Bot started...", "info");
 
-    while (true) {
+ while (retryCount < MAX_RETRIES) {
         try {
             const checkboxes = document.querySelectorAll(CONFIG.selectors.checkbox);
             let hasAction = false;
 
             checkboxes.forEach(chk => {
-                // Check if checkbox value is in target list
                 if (CONFIG.targetCourses.includes(chk.value)) {
                     if (!chk.checked && !chk.disabled) {
                         chk.click();
                         logger(`Selected course: ${chk.value}`, "success");
                         hasAction = true;
+                    } else if (chk.disabled) {
+                        logger(`Course ${chk.value} is full/locked`, "warning");
                     }
                 }
             });
 
-            // If action was taken, submit the form
             if (hasAction) {
                 await sleep(CONFIG.timeout.submitDelay);
                 const saveBtn = document.querySelector(CONFIG.selectors.submitBtn);
@@ -37,22 +40,23 @@ async function main() {
                 if (saveBtn) {
                     saveBtn.click();
                     logger("Clicked save button!", "success");
-                    // Optional: break loop after saving
-                    // break; 
                 } else {
                     logger("Error: Save button not found", "error");
                 }
             }
 
-            // Wait before next scan
+            retryCount++;
+            logger(`Scan ${retryCount}/${MAX_RETRIES}`, "info");
             await sleep(CONFIG.timeout.stepDelay);
 
         } catch (e) {
             logger(`Runtime error: ${e.message}`, "error");
-            await sleep(3000); // Longer wait on error
+            retryCount++;
+            await sleep(3000);
         }
     }
+
+    logger("Max retries reached. Bot stopped.", "warning");
 }
 
-// Start
 main();

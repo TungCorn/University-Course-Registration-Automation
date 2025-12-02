@@ -21,7 +21,8 @@ export function logger(msg, type = 'info') {
  * @returns {Promise}
  */
 export function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    const safeMs = Math.max(ms, 2000);
+    return new Promise(resolve => setTimeout(resolve, safeMs));
 }
 
 /**

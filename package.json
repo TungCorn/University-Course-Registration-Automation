@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TungCorn/course-registration-tool.git"
+    "url": "git+https://github.com/TungCorn/University-Course-Registration-Automation.git"
   },
   "keywords": [
     "automation",
@@ -20,7 +20,7 @@
   "author": "TungCorn",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/TungCorn/course-registration-tool/issues"
+    "url": "https://github.com/TungCorn/University-Course-Registration-Automation/issues"
   },
-  "homepage": "https://github.com/TungCorn/course-registration-tool#readme"
+  "homepage": "https://github.com/TungCorn/University-Course-Registration-Automation#readme"
 }
