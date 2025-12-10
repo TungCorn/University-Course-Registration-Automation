@@ -33,17 +33,22 @@
         let hasAction = false;
 
         // Find all checkboxes on page
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        // Find all custom labels that act as checkboxes for courses
+        const checkboxes = document.querySelectorAll('label[for^="sub_chk_"]');
 
-        checkboxes.forEach(chk => {
-            // If checkbox value matches target course
-            if (CONFIG.targetCourseValues.includes(chk.value)) {
-                if (!chk.checked && !chk.disabled) {
-                    chk.click();
-                    log(`Checked course: ${chk.value}`, 'green');
+        checkboxes.forEach(labelElement => { // Renamed 'chk' to 'labelElement' for clarity
+            const courseId = labelElement.getAttribute('for'); // Get the ID from the 'for' attribute of the label
+            const linkedInput = document.getElementById(courseId); // Find the actual (likely hidden) input element
+
+            // If this course ID is in our target list and the linked input exists
+            if (CONFIG.targetCourseValues.includes(courseId) && linkedInput) {
+                // If the linked input is not checked and not disabled
+                if (!linkedInput.checked && !linkedInput.disabled) {
+                    labelElement.click(); // Click the label to toggle the associated input
+                    log(`Checked course: ${courseId}`, 'green');
                     hasAction = true;
-                } else if (chk.disabled) {
-                    log(`Course ${chk.value} is locked/full`, 'red');
+                } else if (linkedInput.disabled) {
+                    log(`Course ${courseId} is locked/full`, 'red');
                 }
             }
         });
