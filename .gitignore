@@ -14,7 +14,7 @@ Thumbs.db
 .idea/
 
 # Build (optional - if you want to hide compiled userscript)
-# dist/
+dist/
 
 # Personal config with real course codes
 config.local.js
